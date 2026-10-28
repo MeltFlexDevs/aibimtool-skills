@@ -3,7 +3,7 @@
   "name": "io.github.MeltFlexDevs/aibimtool",
   "title": "AIBIMTool",
   "description": "Design buildings as IFC4 BIM models from a brief: an AI architect that plans, asks, builds and changes the model.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "websiteUrl": "https://aibimtool.com/mcp",
   "repository": { "url": "https://github.com/MeltFlexDevs/aibimtool-skills", "source": "github" },
   "remotes": [{ "type": "streamable-http", "url": "https://aibimtool.com/mcp" }],
@@ -12,7 +12,7 @@
       "registryType": "npm",
       "registryBaseUrl": "https://registry.npmjs.org",
       "identifier": "aibimtool-mcp",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "transport": { "type": "stdio" },
       "environmentVariables": [
         {

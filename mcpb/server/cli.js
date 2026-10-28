@@ -21,7 +21,7 @@ Usage
   aibimtool status <id>              state, reply, questions, plan
   aibimtool projects                 list projects
   aibimtool ifc <id> [-o file.ifc]   download the IFC4 model
-  aibimtool image <id> [--view plan] [-o file.png]
+  aibimtool image <id> [--view plan --storey 1] [-o file.png]
   aibimtool stop <id>                stop the running agent
   aibimtool delete <id>              delete a project
   aibimtool mcp                      run the MCP server (also: no arguments)
@@ -32,6 +32,7 @@ Options
   --ifc <file>     with build/send --wait: download the IFC when it is ready
   --level <l>      easy | medium | high (High needs a paid plan)
   --title <t>      a name for a new project
+  --storey <s>     with image: one storey's plan (its name, or 0 for the ground floor)
   --json           print JSON instead of text
 
 Environment
@@ -64,6 +65,8 @@ function parse(argv) {
             flags.title = value();
         else if (a === "--view")
             flags.view = value() === "plan" ? "plan" : "iso";
+        else if (a === "--storey")
+            flags.storey = value();
         else if (a === "--level") {
             const l = value();
             if (l !== "easy" && l !== "medium" && l !== "high")
@@ -185,8 +188,9 @@ async function main(argv) {
             return 0;
         }
         case "image": {
-            need(1, "image <id> [--view plan] [-o file.png]");
-            console.log(writeOutput(await c.image(rest[0], flags.view), `${rest[0]}-${flags.view ?? "iso"}`, "png", flags.out));
+            need(1, "image <id> [--view plan --storey 1] [-o file.png]");
+            const view = flags.storey !== undefined ? "plan" : flags.view;
+            console.log(writeOutput(await c.image(rest[0], view, flags.storey), `${rest[0]}-${view ?? "iso"}${flags.storey !== undefined ? `-storey-${flags.storey}` : ""}`, "png", flags.out));
             return 0;
         }
         case "stop":

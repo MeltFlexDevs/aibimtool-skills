@@ -27,7 +27,7 @@ The model as an **IFC4** file. **Free.**
 The hosted server returns a link valid for seven days that always serves the latest saved model. The model is saved after every step of the agent, so a download while it runs gets the state so far: wait for `ready` before handing it on.
 
 ### `get_model_image`
-A PNG of the model. **Free.** `view: "iso"` is a 3D view; `view: "plan"` is top-down with every room named and its area. The first one can take up to a minute while the BIM engine loads the model.
+A PNG of the model. **Free.** `view: "iso"` is a 3D view; `view: "plan"` is top-down with every room named and its area. On a building with more than one storey **always pass `storey`** with a plan (`0` is the ground floor, or the storey's name, "Level 2"): without it every storey is drawn over the others and the plan is unreadable. A wrong storey answers with the list of the ones the model has. The first picture can take up to a minute while the BIM engine loads the model.
 
 ### `send_message`
 A change to the model, on the same `project_id`, then follow it with `get_project_status` as for a new design. **Metered.**
@@ -42,7 +42,7 @@ Stops a running agent after the step it is on. **Free**; the steps it took are c
 
 1. **Ask what the file is for.** Linking into a Revit or ArchiCAD project wants the IFC; a quick look wants `get_model_image` or the viewer link; a client presentation wants both pictures.
 2. **Say what an AIBIMTool model is.** Real typed IFC4 elements, not a mesh: IfcWall, IfcSlab, IfcDoor, IfcWindow, IfcStair, IfcRoof, IfcColumn, IfcCurtainWall, IfcRailing and every room as an IfcSpace with its name and area, on named storeys, with materials. It is a design model, not construction documentation; say so before anyone sends it to a contractor.
-3. **Look before you report a change.** After a change, `get_model_image` with `view: "plan"` (or `iso` for the envelope) and check it did what was asked before telling the user it is done.
+3. **Look before you report a change.** After a change, `get_model_image` with `view: "plan"` and the storey you changed (or `iso` for the envelope) and check it did what was asked before telling the user it is done.
 4. **Make changes concrete**: the element, where, how much. "Widen the first-floor corridor to 1.6 m", "Replace the flat roof with a 30° gable", "Add a lift beside the stair". One change per message keeps them cheap and easy to check.
 5. **Reuse the project the user means.** Find it with `list_projects` and ask if two could fit. A new project starts the design over and charges for it again.
 6. **Edits made elsewhere stay elsewhere.** Changes in Revit or ArchiCAD do not come back to AIBIMTool; changes in the AIBIMTool workspace (the browser) are part of the model.
@@ -62,5 +62,5 @@ Stops a running agent after the step it is on. **Free**; the steps it took are c
 
 1. `list_projects` to find it (`9f2c41d07a6b4e15  Family house`).
 2. `send_message`: "Make the living room 2 m deeper to the south, keep the other rooms as they are."
-3. `get_project_status` until `ready`, then `get_model_image` with `view: "plan"` to check the living room grew and nothing else moved.
+3. `get_project_status` until `ready`, then `get_model_image` with `view: "plan"` and `storey: 0` to check the living room grew and nothing else moved.
 4. `get_ifc_download`, and tell the user to link it in Revit with Insert, Link IFC.

@@ -69,7 +69,7 @@ Paste the programme into the brief as text. The agent writes it as the project's
 [list_projects]                 → 9f2c41d07a6b4e15  Family house  (52 elements)
 [send_message]  "Move the stair to the north wall and widen the corridor to 1.6 m"
 [get_project_status]            → ready
-[get_model_image]  view: plan   (check the change before reporting it)
+[get_model_image]  view: plan, storey: 1   (check the storey you changed)
 ```
 
 One change per message keeps each run small and easy to check. Always send it to the same `project_id`; a new project would start the design over and charge for it again.

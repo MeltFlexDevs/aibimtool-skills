@@ -4,7 +4,7 @@ import { dirname, extname, join, resolve } from "node:path";
 // megabytes, and a coding agent usually only hands it to the next step.
 export const OUTPUT_DIR = "aibimtool-output";
 const stamp = () => new Date().toISOString().replace(/[:T]/g, "-").slice(0, 19);
-const slug = (s) => s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "-").replace(/^-|-$/g, "").slice(0, 40) || "model";
+const slug = (s) => s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "-").slice(0, 40).replace(/^-+|-+$/g, "") || "model";
 /** Where a result is written: `outputPath` as a file or a folder, else ./aibimtool-output/. */
 export function outputFile(title, ext, outputPath) {
     let path;

@@ -60,7 +60,8 @@ export class Client {
     stop = (id) => this.json("POST", `/projects/${encodeURIComponent(id)}/stop`);
     remove = (id) => this.json("DELETE", `/projects/${encodeURIComponent(id)}`);
     ifc = async (id) => Buffer.from(await (await this.raw("GET", `/projects/${encodeURIComponent(id)}/ifc`)).arrayBuffer());
-    image = async (id, view = "iso") => Buffer.from(await (await this.raw("GET", `/projects/${encodeURIComponent(id)}/image?view=${view}`, undefined, 300_000)).arrayBuffer());
+    /** A PNG of the model; a plan of one `storey` (its name, or its number from the ground floor, 0) reads best. */
+    image = async (id, view = "iso", storey) => Buffer.from(await (await this.raw("GET", `/projects/${encodeURIComponent(id)}/image?view=${view}${storey !== undefined ? `&storey=${encodeURIComponent(storey)}` : ""}`, undefined, 300_000)).arrayBuffer());
     /**
      * Follows a project until it stops running, or until `untilMs`. Calls
      * `onUpdate` whenever the state changes. A run stopped at its time limit is

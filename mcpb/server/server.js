@@ -72,12 +72,18 @@ export async function startServer() {
     }));
     server.registerTool("get_model_image", {
         title: "Look at the model",
-        description: "A PNG of the model, iso (3D) or plan (rooms named), written to disk and shown. Free; up to a minute when the model is not loaded.",
-        inputSchema: { project_id: projectId, view: z.enum(["iso", "plan"]).optional(), output_path: outputPath },
-    }, async ({ project_id, view, output_path }) => run(async () => {
+        description: "A PNG of the model, iso (3D) or plan (rooms named and measured), written to disk and shown. For a building with several storeys " +
+            "pass `storey` with a plan, or every storey is drawn over the others. Free; up to a minute when the model is not loaded.",
+        inputSchema: {
+            project_id: projectId,
+            view: z.enum(["iso", "plan"]).optional(),
+            storey: z.union([z.string(), z.number().int()]).optional().describe('With view plan: the storey\'s name ("Level 2") or its number from the ground floor (0).'),
+            output_path: outputPath,
+        },
+    }, async ({ project_id, view, storey, output_path }) => run(async () => {
         const c = await api();
-        const png = await c.image(project_id, view ?? "iso");
-        const path = writeOutput(png, `${project_id}-${view ?? "iso"}`, "png", output_path);
+        const png = await c.image(project_id, view ?? "iso", storey === undefined ? undefined : String(storey));
+        const path = writeOutput(png, `${project_id}-${view ?? "iso"}${storey === undefined ? "" : `-storey-${storey}`}`, "png", output_path);
         return { content: [{ type: "image", data: png.toString("base64"), mimeType: "image/png" }, { type: "text", text: `Saved to ${path}` }] };
     }));
     server.registerTool("get_ifc_download", {
