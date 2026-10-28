@@ -1,6 +1,6 @@
 {
   "name": "aibimtool",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Design buildings as IFC4 BIM models from a brief: an AI architect that researches, asks, plans and models, then changes the model on request.",
   "author": { "name": "AIBIMTool", "url": "https://aibimtool.com" },
   "homepage": "https://aibimtool.com/mcp",

@@ -21,7 +21,7 @@ npx -y skills add MeltFlexDevs/aibimtool-skills \
 if [ "${AIBIMTOOL_API_KEY:-}" = "" ] && [ ! -f "$HOME/.aibimtool/config.json" ]; then
   warn "No AIBIMTool key found (only needed for the local server and the CLI)."
   echo "    The hosted server needs none: add https://aibimtool.com/mcp to your client and sign in."
-  echo "    For the local server or the CLI (Starter or Studio plan):"
+  echo "    For the local server or the CLI (Studio plan):"
   echo "      npx -y aibimtool-mcp auth login"
 else
   ok "AIBIMTool key found"

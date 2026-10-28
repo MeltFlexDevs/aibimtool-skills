@@ -10,11 +10,11 @@ AIBIMTool's agent designs like an architect working in Revit: it researches the 
 ## Setup (once)
 
 ```bash
-claude mcp add --transport http aibimtool https://aibimtool.com/mcp    # hosted: signs in, every plan
-npx -y aibimtool-mcp auth login                                         # local server and CLI: Starter or Studio
+claude mcp add --transport http aibimtool https://aibimtool.com/mcp    # hosted: signs in (Studio)
+npx -y aibimtool-mcp auth login                                         # local server and CLI: an API key (Studio)
 ```
 
-In Claude and ChatGPT, add `https://aibimtool.com/mcp` as a custom connector. If a tool reports `plan_required` or `out_of_credits`, say so plainly and point at <https://aibimtool.com/dashboard?view=plans> rather than retrying.
+In Claude and ChatGPT, add `https://aibimtool.com/mcp` as a custom connector. If a tool reports `plan_required` (the API, CLI and MCP are part of Studio), `project_limit` (Free 3, Starter 10, Studio 50 projects) or `out_of_credits`, say so plainly and point at <https://aibimtool.com/dashboard?view=plans> rather than retrying.
 
 ## Tools
 
@@ -23,7 +23,7 @@ Starts a new design and returns a `project_id` at once; the agent works in the b
 
 - `brief` (required): the user's brief in their words, completed with what they already told you.
 - `title`: a name for the project; otherwise it is named after the brief.
-- `level`: `easy` for quick, cheap massing and early options; `medium` (default) for a real layout; `high` (paid plans) for a model someone will build on.
+- `level`: `easy` for quick, cheap massing and early options; `medium` (default) for a real layout; `high` (Studio) for a model someone will build on.
 
 ### `get_project_status`
 What the project is doing and waiting for. **Free.** Waits up to `wait_seconds` (max 50, default 30) while the agent runs, so call it in a loop until `state` is not `running`. Returns the agent's `reply`, its `questions` with options, its `plan`, the element count, the credits used and the viewer link.

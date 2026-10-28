@@ -2,9 +2,9 @@
   "manifest_version": "0.2",
   "name": "aibimtool",
   "display_name": "AIBIMTool",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Design buildings as IFC4 BIM models from a brief, right from Claude.",
-  "long_description": "AIBIMTool's AI architect turns a design brief into a real IFC4 BIM model: it researches the building type, asks the questions only you can answer, plans large work, then models storeys, walls, slabs, doors, windows, rooms, stairs and the roof, and changes the model when you ask. Download the IFC for Revit, ArchiCAD, BlenderBIM or Tekla, or look at a 3D or plan picture in the chat. Tools: create_building, get_project_status, send_message, approve_plan, continue_building, get_model_image, get_ifc_download, list_projects, stop_building and check_credits. Needs an AIBIMTool API key (Starter or Studio); every message is billed to your own credits and failed runs are refunded.",
+  "long_description": "AIBIMTool's AI architect turns a design brief into a real IFC4 BIM model: it researches the building type, asks the questions only you can answer, plans large work, then models storeys, walls, slabs, doors, windows, rooms, stairs and the roof, and changes the model when you ask. Download the IFC for Revit, ArchiCAD, BlenderBIM or Tekla, or look at a 3D or plan picture in the chat. Tools: create_building, get_project_status, send_message, approve_plan, continue_building, get_model_image, get_ifc_download, list_projects, stop_building and check_credits. Needs an AIBIMTool API key (Studio plan); every message is billed to your own credits and failed runs are refunded.",
   "author": { "name": "AIBIMTool", "url": "https://github.com/MeltFlexDevs" },
   "homepage": "https://aibimtool.com/mcp",
   "documentation": "https://aibimtool.com/mcp",
@@ -36,7 +36,7 @@
     "api_key": {
       "type": "string",
       "title": "AIBIMTool API key",
-      "description": "Your aibim_sk_ key from aibimtool.com → Developers → API keys (Starter or Studio plan).",
+      "description": "Your aibim_sk_ key from aibimtool.com → Developers → API keys (Studio plan).",
       "sensitive": true,
       "required": true
     }

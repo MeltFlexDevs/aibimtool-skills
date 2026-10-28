@@ -11,7 +11,7 @@
 >    `AIBIMTOOL_API_KEY`. Do not invent a key.
 > 4. Verify by calling `check_credits` (or `npx -y aibimtool-mcp whoami`).
 >
-> The local server and API keys need a Starter or Studio plan. If a key is rejected with a plan error, tell me and stop rather than retrying.
+> The API, the CLI and the MCP server (hosted or local) are part of the Studio plan. If a key is rejected with a plan error, tell me and stop rather than retrying.
 
 ## What gets installed
 

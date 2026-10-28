@@ -6,7 +6,7 @@
       "name": "aibimtool",
       "source": "./",
       "description": "Design buildings as IFC4 BIM models from a brief: an AI architect that researches, asks, plans and models, then changes the model on request.",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "skills": [
         { "name": "design", "path": "skills/aibimtool-design/SKILL.md", "invoke": "/aibimtool:design" },
         { "name": "bim", "path": "skills/aibimtool-bim/SKILL.md", "invoke": "/aibimtool:bim" }

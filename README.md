@@ -1,7 +1,7 @@
 # AIBIMTool Skills
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-22c55e.svg)](./LICENSE)
-[![Version](https://img.shields.io/badge/version-0.1.1-3b82f6.svg)](./VERSION)
+[![Version](https://img.shields.io/badge/version-0.1.2-3b82f6.svg)](./VERSION)
 [![Skills](https://img.shields.io/badge/skills-2-8b5cf6.svg)](#skills)
 [![npm](https://img.shields.io/badge/npm-aibimtool--mcp-cb3837.svg)](https://www.npmjs.com/package/aibimtool-mcp)
 [![Website](https://img.shields.io/badge/aibimtool.com-111111.svg)](https://aibimtool.com)
@@ -68,9 +68,9 @@ More options in [INSTALL.md](./INSTALL.md). Agent-driven install, to paste into 
 
 ## Authenticate
 
-The hosted server at `https://aibimtool.com/mcp` needs nothing here: your client opens the AIBIMTool sign-in, and it works on every plan.
+The hosted server at `https://aibimtool.com/mcp` needs no key: your client opens the AIBIMTool sign-in. Like the API and the CLI, it is part of the **Studio** plan.
 
-The local server and the CLI use an API key, part of the **Starter** and **Studio** plans. The simplest way to get one is the browser flow, which mints a key from your session and hands it back over loopback so you never copy or paste a secret:
+The local server and the CLI use an API key, also part of **Studio**. The simplest way to get one is the browser flow, which mints a key from your session and hands it back over loopback so you never copy or paste a secret:
 
 ```bash
 npx -y aibimtool-mcp auth login

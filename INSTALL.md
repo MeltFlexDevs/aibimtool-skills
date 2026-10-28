@@ -3,7 +3,7 @@
 Two separate things live in this repo, and you can take either or both.
 
 - **Skills** are Markdown files that teach an agent how to use AIBIMTool well: what a brief needs, when to ask the user, how to handle the agent's plan, what to do with the IFC. They carry the judgement the tool schemas cannot.
-- **The MCP server** is the actual command channel, with ten tools. It is hosted at `https://aibimtool.com/mcp` (sign in with your AIBIMTool account, every plan) and published on npm as [`aibimtool-mcp`](https://www.npmjs.com/package/aibimtool-mcp) for a local server with an API key (Starter or Studio).
+- **The MCP server** is the actual command channel, with ten tools. It is hosted at `https://aibimtool.com/mcp` (sign in with your AIBIMTool account) and published on npm as [`aibimtool-mcp`](https://www.npmjs.com/package/aibimtool-mcp) for a local server with an API key. Both are part of the Studio plan.
 
 Most people want both. The skills alone still work: they teach the agent to drive the CLI or the REST API instead.
 
@@ -135,7 +135,7 @@ See [llms-install.md](./llms-install.md), written to be handed straight to the a
 
 ## Authenticate
 
-The hosted server signs you in itself. The local server and the CLI need an API key, part of the **Starter** and **Studio** plans.
+The hosted server signs you in itself. The local server and the CLI need an API key. All three are part of the **Studio** plan.
 
 ```bash
 npx -y aibimtool-mcp auth login
@@ -156,7 +156,7 @@ npx -y aibimtool-mcp credits
 
 **"No AIBIMTool API key"**: run `aibimtool auth login`, or check the `env` block in your client config. Or use the hosted server, which needs no key.
 
-**"The API needs an active Starter or Studio plan"**: the account has no plan. API keys come with Starter and Studio; the hosted server works without one.
+**"API, CLI and MCP access is part of the Studio plan"**: the account is on Free or Starter. The API, the CLI and the MCP server, hosted or local, come with Studio.
 
 **The hosted server asks to sign in again and again**: the client is not keeping the OAuth tokens. Remove the server and add it again; in Claude Code, `/mcp` then Authenticate.
 

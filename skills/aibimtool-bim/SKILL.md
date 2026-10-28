@@ -10,8 +10,8 @@ Everything after the building exists. If the user needs a new design first, use 
 ## Setup (once)
 
 ```bash
-claude mcp add --transport http aibimtool https://aibimtool.com/mcp    # hosted: signs in, every plan
-npx -y aibimtool-mcp auth login                                         # local server and CLI: Starter or Studio
+claude mcp add --transport http aibimtool https://aibimtool.com/mcp    # hosted: signs in (Studio)
+npx -y aibimtool-mcp auth login                                         # local server and CLI: an API key (Studio)
 ```
 
 The hosted server returns links; the local one writes files to `./aibimtool-output/` and returns their paths.
