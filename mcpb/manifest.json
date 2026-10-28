@@ -1,0 +1,45 @@
+{
+  "manifest_version": "0.2",
+  "name": "aibimtool",
+  "display_name": "AIBIMTool",
+  "version": "0.1.0",
+  "description": "Design buildings as IFC4 BIM models from a brief, right from Claude.",
+  "long_description": "AIBIMTool's AI architect turns a design brief into a real IFC4 BIM model: it researches the building type, asks the questions only you can answer, plans large work, then models storeys, walls, slabs, doors, windows, rooms, stairs and the roof, and changes the model when you ask. Download the IFC for Revit, ArchiCAD, BlenderBIM or Tekla, or look at a 3D or plan picture in the chat. Tools: create_building, get_project_status, send_message, approve_plan, continue_building, get_model_image, get_ifc_download, list_projects, stop_building and check_credits. Needs an AIBIMTool API key (Starter or Studio); every message is billed to your own credits and failed runs are refunded.",
+  "author": { "name": "AIBIMTool", "url": "https://github.com/MeltFlexDevs" },
+  "homepage": "https://aibimtool.com/mcp",
+  "documentation": "https://aibimtool.com/mcp",
+  "license": "MIT",
+  "icon": "icon.png",
+  "server": {
+    "type": "node",
+    "entry_point": "server/cli.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/server/cli.js"],
+      "env": { "AIBIMTOOL_API_KEY": "${user_config.api_key}" }
+    }
+  },
+  "tools": [
+    { "name": "create_building", "description": "Start designing a new building from a brief; returns a project id at once (metered credits)." },
+    { "name": "get_project_status", "description": "State, the agent's reply, its questions or plan; waits while the agent runs." },
+    { "name": "send_message", "description": "Answers, changes and follow-ups to a project's agent (metered credits)." },
+    { "name": "approve_plan", "description": "The go-ahead for the agent's plan (metered credits)." },
+    { "name": "continue_building", "description": "Go on after a run stopped at its time limit (metered credits)." },
+    { "name": "get_model_image", "description": "A 3D or plan picture of the model (free)." },
+    { "name": "get_ifc_download", "description": "Write the model as an IFC4 file (free)." },
+    { "name": "list_projects", "description": "The account's projects." },
+    { "name": "stop_building", "description": "Stop the running agent." },
+    { "name": "check_credits", "description": "Plan and credits left." }
+  ],
+  "keywords": ["bim", "ifc", "architecture", "building-design", "revit", "archicad"],
+  "user_config": {
+    "api_key": {
+      "type": "string",
+      "title": "AIBIMTool API key",
+      "description": "Your aibim_sk_ key from aibimtool.com → Developers → API keys (Starter or Studio plan).",
+      "sensitive": true,
+      "required": true
+    }
+  },
+  "compatibility": { "platforms": ["darwin", "win32", "linux"], "runtimes": { "node": ">=18.0.0" } }
+}

@@ -1,0 +1,5 @@
+{
+  "mcpServers": {
+    "aibimtool": { "type": "http", "url": "https://aibimtool.com/mcp" }
+  }
+}

@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# AIBIMTool skills, universal setup: installs the skills and checks sign-in.
+set -euo pipefail
+
+bold() { printf '\033[1m%s\033[0m\n' "$1"; }
+ok()   { printf '  \033[32m✓\033[0m %s\n' "$1"; }
+warn() { printf '  \033[33m!\033[0m %s\n' "$1"; }
+
+bold "AIBIMTool skills setup"
+
+if ! command -v node >/dev/null 2>&1; then
+  warn "Node.js not found. Install Node 18+ from https://nodejs.org and re-run ./setup"
+  exit 1
+fi
+ok "Node $(node -v)"
+
+bold "Installing skills via npx skills..."
+npx -y skills add MeltFlexDevs/aibimtool-skills \
+  || warn "npx skills failed. Try: gh skill install MeltFlexDevs/aibimtool-skills"
+
+if [ "${AIBIMTOOL_API_KEY:-}" = "" ] && [ ! -f "$HOME/.aibimtool/config.json" ]; then
+  warn "No AIBIMTool key found (only needed for the local server and the CLI)."
+  echo "    The hosted server needs none: add https://aibimtool.com/mcp to your client and sign in."
+  echo "    For the local server or the CLI (Starter or Studio plan):"
+  echo "      npx -y aibimtool-mcp auth login"
+else
+  ok "AIBIMTool key found"
+fi
+
+bold "Done."
+echo "Use /aibimtool:design or /aibimtool:bim in your agent. Docs: https://aibimtool.com/mcp"

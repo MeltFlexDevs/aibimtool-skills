@@ -1,0 +1,27 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.MeltFlexDevs/aibimtool",
+  "title": "AIBIMTool",
+  "description": "Design buildings as IFC4 BIM models from a brief: an AI architect that plans, asks, builds and changes the model.",
+  "version": "0.1.0",
+  "websiteUrl": "https://aibimtool.com/mcp",
+  "repository": { "url": "https://github.com/MeltFlexDevs/aibimtool-skills", "source": "github" },
+  "remotes": [{ "type": "streamable-http", "url": "https://aibimtool.com/mcp" }],
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "aibimtool-mcp",
+      "version": "0.1.0",
+      "transport": { "type": "stdio" },
+      "environmentVariables": [
+        {
+          "name": "AIBIMTOOL_API_KEY",
+          "description": "Your AIBIMTool API key (aibim_sk_...), Starter or Studio plan. Create one at https://aibimtool.com/dashboard/developers/api-keys, or run `npx -y aibimtool-mcp auth login` to sign in through the browser instead.",
+          "isRequired": false,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
