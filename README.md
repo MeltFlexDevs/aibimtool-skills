@@ -6,24 +6,20 @@
 [![npm](https://img.shields.io/badge/npm-aibimtool--mcp-cb3837.svg)](https://www.npmjs.com/package/aibimtool-mcp)
 [![Website](https://img.shields.io/badge/aibimtool.com-111111.svg)](https://aibimtool.com)
 
-AI agent skills and an MCP server for **designing buildings as real BIM models** with [AIBIMTool](https://aibimtool.com). Describe a building; an AI architect researches the type, asks the few questions only you can answer, plans large work, then models every storey, wall, slab, door, window, room, stair and roof as **IFC4**, and changes the model when you ask. Works with Claude, ChatGPT, Claude Code, Cursor, Codex, VS Code, Windsurf and anything else that speaks MCP or loads Markdown skills.
+AI agent skills for **designing buildings as real BIM models** with AIBIMTool. Describe a building; an AI architect researches the type, asks the few questions only you can answer, plans large work, then models every storey, wall, slab, door, window, room, stair and roof as **IFC4**, and changes the model when you ask. Works with Claude, ChatGPT, Claude Code, Cursor, Codex, VS Code, Windsurf and anything else that loads Markdown skills or speaks MCP.
 
-Every user signs in with their **own** AIBIMTool account, and every message is billed to its credits.
+Each user signs in with their **own** AIBIMTool account, and every message is billed to its credits. The skills drive the public [AIBIMTool API](https://aibimtool.com/developers/api) through the MCP server, so there is nothing to build and no BIM kernel to install.
 
-## Connect in one line
+<p align="center">
+  <img src="https://aibimtool.com/developers/sample-plan.webp" width="46%" alt="Plan of a two-storey house with every room named and its area, as the API returns it" />
+  <img src="https://aibimtool.com/developers/sample-thumb.webp" width="30%" alt="3D view of the same house: curved glass front, timber fins, terrace" />
+</p>
 
-The hosted MCP server needs no key and works on every plan. Add this URL as a connector and sign in:
+<p align="center"><sub>One brief, one IFC4 model: the plan with every room measured, and the building itself.</sub></p>
 
-```
-https://aibimtool.com/mcp
-```
+## Install
 
-- **Claude** (claude.ai or Desktop): Settings → Connectors → Add custom connector.
-- **Claude Code**: `claude mcp add --transport http aibimtool https://aibimtool.com/mcp`, then `/mcp` → Authenticate.
-- **ChatGPT**: Settings → Apps & Connectors → Advanced → Developer mode → Create.
-- **Cursor, VS Code, Windsurf**: see [INSTALL.md](./INSTALL.md).
-
-## Install the skills
+Pick one. Each method sets the skills up for your agent.
 
 ### `npx skills` (recommended, cross-agent)
 
@@ -37,71 +33,132 @@ npx skills add MeltFlexDevs/aibimtool-skills
 gh skill install MeltFlexDevs/aibimtool-skills
 ```
 
-### Claude Code plugin (skills and the MCP server together)
+### Claude Code marketplace
+
+Inside Claude Code:
 
 ```
 /plugin marketplace add MeltFlexDevs/aibimtool-skills
 /plugin install aibimtool@aibimtool
 ```
 
-### Local MCP server (API key)
+The plugin brings the hosted MCP server with it: run `/mcp` and choose Authenticate once.
 
-For agents with a filesystem: the same tools, with IFC files and pictures written to `./aibimtool-output/`.
+### MCP server only
+
+If you want the tools without the skills, add the hosted server. It signs you in with your AIBIMTool account and needs no key:
 
 ```bash
-claude mcp add aibimtool -- npx -y aibimtool-mcp
+claude mcp add --transport http aibimtool https://aibimtool.com/mcp
 ```
 
-It signs in through the browser on first use (Starter or Studio plan), or reads `AIBIMTOOL_API_KEY`. More in [INSTALL.md](./INSTALL.md); for an agent to install it for you, paste [INSTALL_FOR_AGENTS.md](./INSTALL_FOR_AGENTS.md).
+In Claude (claude.ai or Desktop) and ChatGPT, add `https://aibimtool.com/mcp` as a custom connector. For a local server with an API key: `claude mcp add aibimtool -- npx -y aibimtool-mcp`. Configuration for Cursor, Codex, VS Code and Windsurf is in [INSTALL.md](./INSTALL.md) and on the [MCP page](https://aibimtool.com/mcp).
+
+### Setup script
+
+Universal fallback:
+
+```bash
+git clone --depth 1 https://github.com/MeltFlexDevs/aibimtool-skills.git
+cd aibimtool-skills
+./setup
+```
+
+More options in [INSTALL.md](./INSTALL.md). Agent-driven install, to paste into your agent: [INSTALL_FOR_AGENTS.md](./INSTALL_FOR_AGENTS.md).
+
+## Authenticate
+
+The hosted server at `https://aibimtool.com/mcp` needs nothing here: your client opens the AIBIMTool sign-in, and it works on every plan.
+
+The local server and the CLI use an API key, part of the **Starter** and **Studio** plans. The simplest way to get one is the browser flow, which mints a key from your session and hands it back over loopback so you never copy or paste a secret:
+
+```bash
+npx -y aibimtool-mcp auth login
+```
+
+Or create one by hand at **[aibimtool.com](https://aibimtool.com/dashboard/developers/api-keys) → Developers → API keys** and export it:
+
+```bash
+export AIBIMTOOL_API_KEY="aibim_sk_..."
+```
+
+The key is shown exactly once at creation. Only its SHA-256 is stored, so nobody can recover it afterwards, including us. An account may hold five live keys and revoking one takes effect on the next request.
 
 ## Skills
 
 | Skill | Invoke | What it covers |
 | --- | --- | --- |
-| [`aibimtool-design`](./skills/aibimtool-design/SKILL.md) | `/aibimtool:design` | A brief to a BIM model: writing the brief, the agent's questions, approving its plan, following the build, levels and costs. |
-| [`aibimtool-bim`](./skills/aibimtool-bim/SKILL.md) | `/aibimtool:bim` | After the model exists: the IFC file, opening it in Revit, ArchiCAD, BlenderBIM or Tekla, pictures, and changes. |
+| [`aibimtool-design`](./skills/aibimtool-design/SKILL.md) | `/aibimtool:design` | A brief to a BIM model: writing a brief the agent builds well, its questions, approving its plan, following the build, levels and costs. |
+| [`aibimtool-bim`](./skills/aibimtool-bim/SKILL.md) | `/aibimtool:bim` | Everything after the model exists: the IFC file, opening it in Revit, ArchiCAD, BlenderBIM or Tekla, pictures to check it by, and changes. |
 
 ## Tools
 
-| Tool | What it does | Credits |
+| Tool | What it does | Cost |
 | --- | --- | --- |
 | `create_building` | Start a new design from a brief; returns a project id at once | Metered |
 | `get_project_status` | State, the agent's reply, its questions or plan; waits while it runs | Free |
 | `send_message` | Answers, changes and follow-ups to a project's agent | Metered |
 | `approve_plan` | The go-ahead for the agent's plan | Metered |
 | `continue_building` | Go on after a run stopped at its time limit | Metered |
-| `get_model_image` | A 3D or plan picture of the model | Free |
-| `get_ifc_download` | The IFC4 model: a link (hosted) or a file on disk (local) | Free |
+| `get_model_image` | A 3D view, or a plan with every room named and measured | Free |
+| `get_ifc_download` | The IFC4 model: a file on disk (local) or a link (hosted) | Free |
 | `list_projects` | The account's projects | Free |
-| `stop_building` | Stop the running agent | Free |
+| `stop_building` | Stop the running agent after its current step | Free |
 | `check_credits` | Plan and credits left | Free |
 
-**Metered** means a message is charged for the AI it uses: 1 credit per $0.02, at most 150 credits per 8-minute segment. A run that fails on our side is refunded automatically.
+**Metered** means a message is charged for the AI it uses: 1 credit per $0.02, at most 150 credits per 8-minute segment. A run that fails on our side is refunded automatically, so an agent that retries does not quietly drain the balance.
 
-## What it looks like
+A building takes minutes, longer than a chat holds a tool call open, so `create_building` returns at once and `get_project_status` waits up to 50 seconds per call while the agent works. The local server writes IFC files and pictures to disk (`./aibimtool-output/` unless you pass `output_path`) and returns the path rather than the bytes: an IFC is megabytes, and the agent usually just hands it to the next step.
 
-> **You:** Design a two-storey family house, 160 m², four bedrooms, garden to the south.
+## What it looks like in practice
+
+> **You:** Design a two-storey family house, about 110 m², open living room and kitchen behind a curved glass front, two bedrooms. Then give me the IFC.
 
 ```
-[create_building]     → project 9f2c41d07a6b4e15, running
-[get_project_status]  → needs_answer
-                        1. Garage: single garage / no garage
-                        2. Roof: flat / pitched
-> You: Single garage, pitched roof.
-[send_message]        → running
-[get_project_status]  → ready · 214 elements · 38 credits
-[get_model_image]     → (the 3D view)
-[get_ifc_download]    → https://aibimtool.com/api/mcp/ifc?t=…
+[create_building]     brief: "Two-storey family house, about 110 m², …"
+→ project 9f2c41d07a6b4e15 · running
+
+[get_project_status]  wait_seconds: 50
+→ needs_answer
+  1. Roof: Flat (green roof) / Pitched (30° gable)
+
+> You: Flat.
+
+[send_message]        "Roof: flat."
+[get_project_status]  → ready · 52 elements · 41 credits
+
+[get_model_image]     view: plan
+→ ./aibimtool-output/9f2c41d07a6b4e15-plan-2026-10-28-14-02-09.png
+[get_ifc_download]
+→ ./aibimtool-output/family-house-2026-10-28-14-02-11.ifc
 ```
 
-The IFC opens in Revit, ArchiCAD, BlenderBIM, Tekla, Navisworks and Solibri; the project also opens in the AIBIMTool 3D viewer.
+The IFC opens in Revit, ArchiCAD, BlenderBIM, Tekla and Navisworks; the project also opens in the AIBIMTool 3D viewer to keep changing it. More patterns in [COOKBOOK.md](./COOKBOOK.md).
 
-## Also
+## A good brief changes everything
 
-- REST API and CLI: <https://aibimtool.com/developers>
-- MCP docs: <https://aibimtool.com/mcp>
-- Worked examples: [COOKBOOK.md](./COOKBOOK.md)
+The agent builds what the brief says and researches the rest, stating its assumptions. A brief that names the building type, its size, the number of storeys and the rooms that matter gets a design on the first run; a vague one gets questions first. Pass the user's words, add what they already told you, and never invent requirements to make it look complete. It is the single biggest quality lever in the whole workflow.
 
-## License
+## The CLI
 
-MIT
+The same package is a command-line tool when you run it with arguments instead of letting an agent speak MCP to it:
+
+```bash
+aibimtool build "Kindergarten for 60 children, one storey, 4 groups" --wait --yes --ifc kindergarten.ifc
+aibimtool send 9f2c41d07a6b4e15 "Move the stair to the north wall" --wait
+aibimtool image 9f2c41d07a6b4e15 --view plan -o plan.png
+```
+
+Full reference at [aibimtool.com/developers/cli](https://aibimtool.com/developers/cli).
+
+## Documentation
+
+- [API reference](https://aibimtool.com/developers/api): every endpoint, request and response
+- [CLI](https://aibimtool.com/developers/cli): every command and flag
+- [MCP](https://aibimtool.com/mcp): client-by-client setup
+- [COOKBOOK.md](./COOKBOOK.md): worked examples
+- [CONTRIBUTING.md](./CONTRIBUTING.md)
+
+## Licence
+
+MIT. See [LICENSE](./LICENSE).

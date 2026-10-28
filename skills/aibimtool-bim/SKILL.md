@@ -1,44 +1,66 @@
 ---
 name: aibimtool-bim
-description: Work with the BIM models AIBIMTool makes. Use when the user wants the IFC file of an AIBIMTool project, wants to open it in Revit, ArchiCAD, BlenderBIM, Tekla, Navisworks, Solibri or another IFC viewer, wants a plan or 3D picture of the model, wants to change an existing AIBIMTool model, list or clean up their projects, or asks what an AIBIMTool model contains.
+description: Work with the BIM models AIBIMTool makes. Use when the user wants the IFC file of an AIBIMTool project, wants to open or link it in Revit, ArchiCAD, BlenderBIM, Tekla, Navisworks, Solibri or another IFC tool, wants a plan or a 3D picture of the model, wants to change an existing AIBIMTool model ("make the living room bigger", "add a balcony"), wants to list, stop or clean up their projects, or asks what an AIBIMTool model contains.
 ---
 
 # AIBIMTool: the model, its IFC and changes to it
 
-Everything after the building exists. To design a new one, use the `aibimtool-design` skill.
+Everything after the building exists. If the user needs a new design first, use the `aibimtool-design` skill and come back here with its `project_id`.
 
-## What a model is
+## Setup (once)
 
-An **IFC4** file built with IfcOpenShell: a site, a building, storeys, and real typed elements (IfcWall, IfcSlab, IfcDoor, IfcWindow, IfcSpace for each room with its name and area, IfcStair, IfcRoof, IfcColumn, IfcCurtainWall, IfcRailing, IfcCovering, with materials). Rooms carry their names and areas, so schedules and area take-offs work in any BIM tool. It is a design model, not construction documentation: say so if the user is about to send it to a contractor as-is.
+```bash
+claude mcp add --transport http aibimtool https://aibimtool.com/mcp    # hosted: signs in, every plan
+npx -y aibimtool-mcp auth login                                         # local server and CLI: Starter or Studio
+```
 
-## Getting the file
+The hosted server returns links; the local one writes files to `./aibimtool-output/` and returns their paths.
 
-- Hosted MCP (Claude, ChatGPT): `get_ifc_download` returns a link valid for 7 days that always serves the latest saved model.
-- Local MCP: `get_ifc_download` writes `./aibimtool-output/<title>-<time>.ifc` (or `output_path`) and returns the path.
-- CLI: `aibimtool ifc <id> -o house.ifc`. API: `GET /api/v1/projects/:id/ifc`.
+## Tools
 
-The model is saved after every step of the agent, so a download during a run gets the state so far. Wait for `ready` before handing it on.
+### `get_ifc_download`
+The model as an **IFC4** file. **Free.**
 
-## Opening it
+- `project_id` (required).
+- `output_path` (local server): a file or a folder; defaults to `./aibimtool-output/`.
+
+The hosted server returns a link valid for seven days that always serves the latest saved model. The model is saved after every step of the agent, so a download while it runs gets the state so far: wait for `ready` before handing it on.
+
+### `get_model_image`
+A PNG of the model. **Free.** `view: "iso"` is a 3D view; `view: "plan"` is top-down with every room named and its area. The first one can take up to a minute while the BIM engine loads the model.
+
+### `send_message`
+A change to the model, on the same `project_id`, then follow it with `get_project_status` as for a new design. **Metered.**
+
+### `list_projects`
+The account's projects with their ids, newest first. **Free.**
+
+### `stop_building`
+Stops a running agent after the step it is on. **Free**; the steps it took are charged and the model keeps what they built.
+
+## How to work with the user
+
+1. **Ask what the file is for.** Linking into a Revit or ArchiCAD project wants the IFC; a quick look wants `get_model_image` or the viewer link; a client presentation wants both pictures.
+2. **Say what an AIBIMTool model is.** Real typed IFC4 elements, not a mesh: IfcWall, IfcSlab, IfcDoor, IfcWindow, IfcStair, IfcRoof, IfcColumn, IfcCurtainWall, IfcRailing and every room as an IfcSpace with its name and area, on named storeys, with materials. It is a design model, not construction documentation; say so before anyone sends it to a contractor.
+3. **Look before you report a change.** After a change, `get_model_image` with `view: "plan"` (or `iso` for the envelope) and check it did what was asked before telling the user it is done.
+4. **Make changes concrete**: the element, where, how much. "Widen the first-floor corridor to 1.6 m", "Replace the flat roof with a 30° gable", "Add a lift beside the stair". One change per message keeps them cheap and easy to check.
+5. **Reuse the project the user means.** Find it with `list_projects` and ask if two could fit. A new project starts the design over and charges for it again.
+6. **Edits made elsewhere stay elsewhere.** Changes in Revit or ArchiCAD do not come back to AIBIMTool; changes in the AIBIMTool workspace (the browser) are part of the model.
+
+## Opening the IFC
 
 | Tool | How |
 | --- | --- |
-| Revit | Insert → Link IFC (to keep it as a reference) or File → Open → IFC (to convert to native elements). |
-| ArchiCAD | File → Open → select the .ifc; or File → Interoperability → IFC → Merge into a project. |
-| BlenderBIM / Bonsai | File → Open IFC Project. Edits stay native IFC. |
+| Revit | Insert, Link IFC to keep it as a reference; File, Open, IFC to convert it to native elements. |
+| ArchiCAD | File, Open the .ifc; or File, Interoperability, IFC, Merge into a project. |
+| BlenderBIM / Bonsai | File, Open IFC Project. Edits stay native IFC. |
 | Tekla, Navisworks, Solibri, BIMcollab | Open or append the .ifc directly. |
-| Quick look | The AIBIMTool viewer link in every status (`viewerUrl`), signed in as the same account. |
 
-## Looking at it
+## Example
 
-`get_model_image` with `view: "iso"` (3D) or `"plan"` (top-down, rooms named with areas). Free. The first one can take up to a minute while the BIM engine loads the model. Use it to check a change before telling the user it is done, and to show the user without making them open the viewer.
+> User: "Take the family house you made, make the living room 2 m deeper, and give me the IFC for Revit."
 
-## Changing it
-
-`send_message` on the same `project_id`, then follow the status as for a new design. Be concrete: element, place, amount. "Widen the corridor on the first floor to 1.6 m", "Replace the flat roof with a 30° gable roof", "Add a lift next to the stair". One change per message keeps them cheap and easy to check; several small related ones can go together.
-
-The agent cannot read edits made to the IFC in another tool: changes made in Revit stay in Revit. Changes made in the AIBIMTool workspace (the browser) are part of the model.
-
-## Projects
-
-`list_projects` lists them, newest first. Reuse the project the user means rather than starting a new one; ask if it is ambiguous. `stop_building` stops a run after its current step (the steps taken are charged).
+1. `list_projects` to find it (`9f2c41d07a6b4e15  Family house`).
+2. `send_message`: "Make the living room 2 m deeper to the south, keep the other rooms as they are."
+3. `get_project_status` until `ready`, then `get_model_image` with `view: "plan"` to check the living room grew and nothing else moved.
+4. `get_ifc_download`, and tell the user to link it in Revit with Insert, Link IFC.
