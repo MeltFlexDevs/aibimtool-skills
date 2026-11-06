@@ -1,0 +1,8 @@
+{
+  "name": "aibimtool",
+  "version": "0.1.2",
+  "description": "Design buildings as IFC4 BIM models from a brief: an AI architect that plans, builds and edits.",
+  "mcpServers": {
+    "aibimtool": { "httpUrl": "https://aibimtool.com/mcp" }
+  }
+}
